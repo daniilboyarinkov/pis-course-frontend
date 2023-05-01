@@ -16,13 +16,13 @@ export const booksApi = createApi({
                         ]
                         : [{ type: 'Books', id: 'LIST' }],
             }),
-            getBook: builder.query<IBook[], string>({
+            getBook: builder.query<IBook, string>({
                 query: (id) => `/books/${id}`,
                 providesTags: (result, error, id) => [{ type: 'Books', id }],
             }),
             createBook: builder.mutation<IBook, Partial<IBook>>({
                 query: (body) => ({
-                    url: `/books/create`,
+                    url: `/books`,
                     method: 'POST',
                     body,
                 }),
@@ -45,7 +45,7 @@ export const booksApi = createApi({
                     url: `/books/${id}`,
                     method: 'DELETE',
                 }),
-                invalidatesTags: (result, error, id) => [{ type: 'Books', id }],
+                invalidatesTags: () => [{ type: 'Books'}],
             }),
         }),
     }

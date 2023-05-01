@@ -10,7 +10,7 @@ type TableProps<T> = {
     /**
      * заголовки столбцов таблицы
      */
-    headers: IHeadRowTitle[];
+    headers?: IHeadRowTitle[];
     /**
      * действие выполняемое при клике на строку таблицы
      * @param id
@@ -36,7 +36,11 @@ export function Table<T extends object>(props: TableProps<T>) {
             {props.data.length > 0 ?
                 <>
                     <table className="table-zebra table-compact table w-full">
-                        <TableHeadRow headers={props.headers ?? []}/>
+                        {
+                            props.headers && (
+                                <TableHeadRow headers={props.headers ?? []}/>
+                            )
+                        }
                         <tbody>
                         {props.data.map((item, index) =>
                             (props.hideOverLimit ?? true) && !expanded && index >= (props.rowLimit ?? TABLE_ROW_LIMIT) ? null : (
@@ -50,9 +54,13 @@ export function Table<T extends object>(props: TableProps<T>) {
                         )}
                         </tbody>
                     </table>
-                    <button className="btn my-2" onClick={handleExpandedChange}>
-                        {expanded ? "Скрыть" : "Показать ещё"}
-                    </button>
+                    {
+                         props.data.length > (props.rowLimit ?? TABLE_ROW_LIMIT) && (
+                            <button className="btn my-2" onClick={handleExpandedChange}>
+                                {expanded ? "Скрыть" : "Показать ещё"}
+                            </button>
+                        )
+                    }
                 </>
                 : <div>No data...</div>}
         </div>
@@ -91,7 +99,7 @@ type TableRowProps<T> = {
 
 export function TableRow<T extends object>(props: TableRowProps<T>) {
     return (
-        <tr onClick={() => props.onRowClick?.(props.content[Object.keys(props.content)[0] as keyof typeof props.content])}>
+        <tr onClick={() => props.onRowClick?.(props.content[Object.keys(props.content)[0] as keyof typeof props.content])} className="cursor-pointer">
             {Object.keys(props.content).map((el, index) => (
                 <td key={`${el}-${index}`} className="whitespace-normal">
                     {String(props.content[el as keyof typeof props.content])}

@@ -12,10 +12,14 @@ export enum OrderStatus {
 }
 
 export interface IBook {
-    book_id: string | number,
-    registration_date: any,
+    book_id: number,
     title: string,
+    registration_date?: any,
     author?: string,
+}
+
+export interface IBookStatistic extends IBook {
+    taken_count: number,
 }
 
 export interface IEmployee {

@@ -37,7 +37,10 @@ export const authApi = createApi({
                     }
                 },
             }),
+            update: builder.query<any, string>({
+                query: () => `/update`,
+            }),
         }),
     });
 
-export const {useLoginMutation} = authApi;
+export const {useLoginMutation, useUpdateQuery} = authApi;

@@ -13,31 +13,37 @@ export function Header() {
             </div>
             <div className="flex-none">
                 <ul className="menu menu-horizontal px-1">
-                    <li>
-                        <Link to='/readers' className="btn btn-ghost normal-case text-xl">
-                            Читатели
-                        </Link>
-                    </li>
-                    <li>
-                        <Link to='/employees' className="btn btn-ghost normal-case text-xl">
-                            Работники
-                        </Link>
-                    </li>
-                    <li>
-                        <Link to='/books' className="btn btn-ghost normal-case text-xl">
-                            Книги
-                        </Link>
-                    </li>
-                    <li>
-                        <Link to='/orders' className="btn btn-ghost normal-case text-xl">
-                            Заказы
-                        </Link>
-                    </li>
-                    <li>
-                        <Link to='/events' className="btn btn-ghost normal-case text-xl">
-                            События
-                        </Link>
-                    </li>
+                    {
+                        isLoggedIn && (
+                            <>
+                                <li>
+                                    <Link to='/readers' className="btn btn-ghost normal-case text-xl">
+                                        Читатели
+                                    </Link>
+                                </li>
+                                <li>
+                                    <Link to='/employees' className="btn btn-ghost normal-case text-xl">
+                                        Работники
+                                    </Link>
+                                </li>
+                                <li>
+                                    <Link to='/books' className="btn btn-ghost normal-case text-xl">
+                                        Книги
+                                    </Link>
+                                </li>
+                                <li>
+                                    <Link to='/orders' className="btn btn-ghost normal-case text-xl">
+                                        Заказы
+                                    </Link>
+                                </li>
+                                <li>
+                                    <Link to='/events' className="btn btn-ghost normal-case text-xl">
+                                        События
+                                    </Link>
+                                </li>
+                            </>
+                        )
+                    }
                     <li>
                         {
                             isLoggedIn

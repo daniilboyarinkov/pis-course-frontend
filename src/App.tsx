@@ -13,7 +13,7 @@ function App(): JSX.Element {
 
     return (
         <div
-            className="grid min-h-screen"
+            className="grid min-h-screen bg-gray-50 dark:bg-gray-900"
             style={{
                 gridTemplateRows: "auto 1fr auto",
             }}
