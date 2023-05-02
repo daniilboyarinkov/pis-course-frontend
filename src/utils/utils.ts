@@ -11,12 +11,13 @@ import {
  *
  * @param role
  */
-export const userPermissions = (role: Position) => {
-    switch (role) {
+export const userPermissions = (role: Position | undefined) => {
+    switch (role?.toLowerCase()) {
         case(Position.READER): return READER_PERMISSIONS;
         case(Position.ADMINISTRATOR): return ADMINISTRATOR_PERMISSIONS;
         case(Position.LIBRARIAN): return LIBRARIAN_PERMISSIONS;
         case(Position.BIBLIOGRAPHER): return BIBLIOGRAPHER_PERMISSIONS;
+        default: return READER_PERMISSIONS;
     }
 }
 

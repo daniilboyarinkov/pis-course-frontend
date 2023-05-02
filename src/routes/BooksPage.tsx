@@ -1,19 +1,28 @@
 import {Table} from '../components/Table';
 import {TABLE_BOOK_HEADER_TITLES, TABLE_STATISTIC_BOOK_HEADER_TITLES} from '../constants/table';
 import {
-    useCreateBookMutation,
-    useDeleteBookMutation,
-    useGetAllBooksQuery,
-    useUpdateBookMutation
+    useCreateMutation,
+    useDeleteMutation,
+    useGetAllQuery,
+    useUpdateMutation
 } from '../app/booksApi';
 import React, {ChangeEvent, FormEvent, useEffect, useMemo, useState} from 'react';
 import {IBook} from '../app/types';
 import {useImmer} from 'use-immer';
 import {toast} from 'react-toastify';
 import {FetchBaseQueryError} from '@reduxjs/toolkit/query';
-import {FormInput, IFormInput} from '../components/FormInput';
+import {IFormInput} from '../components/FormInput';
 import {useGetBookStatisticQuery} from '../app/statisticApi';
 import {useUpdateQuery} from '../app/auth/authApi';
+import Modal from '../components/Modal';
+import {useAppSelector} from '../app/hooks';
+import {userPermissions} from '../utils/utils';
+import {
+    BOOK_CREATE_PERMISSION,
+    BOOK_DELETE_PERMISSION,
+    BOOK_UPDATE_PERMISSION,
+    STATISTIC_READ_PERMISSION
+} from '../constants/permissions';
 
 const initialBook: IBook = {
     book_id: 1,
@@ -21,9 +30,16 @@ const initialBook: IBook = {
     title: '',
 }
 
+const CREATE_MODAL = 'create-modal';
+const UPDATE_MODAL = 'update-modal';
+const DELETE_MODAL = 'delete-modal';
+
 export default function BooksPage() {
     const {data: _} = useUpdateQuery('');
-    const {data: books = [], isLoading, error, refetch} = useGetAllBooksQuery("");
+    const {data: books = [], isLoading, error, refetch} = useGetAllQuery("");
+
+    const {user} = useAppSelector(state => state.userState);
+    const permissions = userPermissions(user?.role);
 
     const [searchByTitle, setSearchByTitle] = useState('');
     const [searchByAuthor, setSearchByAuthor] = useState('');
@@ -43,9 +59,9 @@ export default function BooksPage() {
         setUpdatedBook(activeBook ?? initialBook);
     }, [activeBook, setUpdatedBook])
 
-    const [createBook] = useCreateBookMutation();
-    const [updateBook] = useUpdateBookMutation();
-    const [deleteBook] = useDeleteBookMutation();
+    const [createBook] = useCreateMutation();
+    const [updateBook] = useUpdateMutation();
+    const [deleteBook] = useDeleteMutation();
 
     const {data: book} = useGetBookStatisticQuery(String(activeBook?.book_id ?? '1'));
 
@@ -144,7 +160,7 @@ export default function BooksPage() {
         ],
         [setUpdatedBook, updatedBook?.author, updatedBook?.title]);
 
-        const deleteFields = useMemo((): IFormInput[] => [
+    const deleteFields = useMemo((): IFormInput[] => [
             {
                 id: 'input-form-1',
                 label_text: 'Подтвердите удаление, введя ID строки',
@@ -220,7 +236,7 @@ export default function BooksPage() {
                         )
                     }
                     {
-                        activeBook && book && (
+                        permissions.includes(STATISTIC_READ_PERMISSION) && activeBook && book && (
                             <div className="py-8">
                                 <p className='text-2xl'>Статистика по выбранной книге:</p>
                                 <Table data={Object.keys(book).map((key, index) => {
@@ -232,16 +248,32 @@ export default function BooksPage() {
                             </div>
                         )
                     }
+                    {/* CONTROLS */}
                     <div className="flex py-4 gap-2">
                         {
                             activeBook && (
                                 <>
-                                    <label htmlFor="update-modal" className="flex-auto btn btn-active btn-primary">Изменить</label>
-                                    <label htmlFor="delete-modal" className="flex-auto btn btn-active btn-secondary">Удалить</label>
+                                    {
+                                        permissions.includes(BOOK_UPDATE_PERMISSION) && (
+                                            <label htmlFor={UPDATE_MODAL}
+                                                   className="flex-auto btn btn-active btn-primary">Изменить</label>
+                                        )
+                                    }
+                                    {
+                                        permissions.includes(BOOK_DELETE_PERMISSION) && (
+                                            <label htmlFor={DELETE_MODAL}
+                                                   className="flex-auto btn btn-active btn-secondary">Удалить</label>
+                                        )
+                                    }
                                 </>
                             )
                         }
-                        <label htmlFor="add-modal" className="flex-auto btn btn-active btn-accent">Создать</label>
+                        {
+                            permissions.includes(BOOK_CREATE_PERMISSION) && (
+                                <label htmlFor={CREATE_MODAL}
+                                       className="flex-auto btn btn-active btn-accent">Создать</label>
+                            )
+                        }
                     </div>
                     <div className="flex pb-4 gap-2">
                         <button onClick={refetch} className="flex-auto btn btn-active">Обновить</button>
@@ -249,54 +281,9 @@ export default function BooksPage() {
                 </div>
             </div>
 
-
-            {/* Create Book Modal */}
-            <input type="checkbox" id="add-modal" className="modal-toggle"/>
-            <label htmlFor="add-modal" className="modal cursor-pointer">
-                <form className="modal-box relative grid gap-4 grid-cols-2" onSubmit={handleCreate}>
-                    {
-                        createFields.map(inp => (
-                            <FormInput
-                                key={inp.id}
-                                {...inp}
-                            />
-                        ))
-                    }
-                    <button className="btn btn-accent col-span-2"> Submit</button>
-            </form>
-        </label>
-
-            {/* Update Book Modal */}
-            <input type="checkbox" id="update-modal" className="modal-toggle"/>
-            <label htmlFor="update-modal" className="modal cursor-pointer">
-                <form className="modal-box relative grid gap-4 grid-cols-2" onSubmit={handleUpdate}>
-                    {
-                        updateFields.map(inp => (
-                            <FormInput
-                                key={inp.id}
-                                {...inp}
-                            />
-                        ))
-                    }
-                    <button className="btn btn-primary col-span-2"> Submit</button>
-            </form>
-        </label>
-
-        {/* Delete Book Modal */}
-        <input type="checkbox" id="delete-modal" className="modal-toggle"/>
-        <label htmlFor="delete-modal" className="modal cursor-pointer">
-            <form className="modal-box relative grid gap-4" onSubmit={handleDelete}>
-                {
-                    deleteFields.map(inp => (
-                        <FormInput
-                            key={inp.id}
-                            {...inp}
-                        />
-                    ))
-                }
-                <button className="btn btn-danger">Submit</button>
-            </form>
-        </label>
-</div>
-)
+            <Modal name={CREATE_MODAL} fields={createFields} submitAction={handleCreate} submitColor='accent'/>
+            <Modal name={UPDATE_MODAL} fields={updateFields} submitAction={handleUpdate} submitColor='primary'/>
+            <Modal name={DELETE_MODAL} fields={deleteFields} submitAction={handleDelete} submitColor='danger'/>
+        </div>
+    )
 }

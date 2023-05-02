@@ -43,6 +43,14 @@ export interface IReader {
     role?: Position,
 }
 
+export interface IReaderStatistic {
+    reader_id: number,
+    full_name: string,
+    opened_count: number,
+    closed_count: number,
+    overdued_count: number,
+}
+
 export type IUser = IEmployee | IReader;
 
 export interface ILibrary {

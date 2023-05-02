@@ -1,47 +1,47 @@
 import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/query/react";
-import {IBook} from "./types";
+import {IEvent} from "./types";
 
-const TAG = 'Books';
-const endpoint = '/books';
+const TAG = 'Events';
+const endpoint = '/events';
 
-export const booksApi = createApi({
-        reducerPath: "booksApi",
+export const eventsApi = createApi({
+        reducerPath: "eventsApi",
         baseQuery: fetchBaseQuery({baseUrl: "http://localhost:3001"}),
         tagTypes: [TAG],
         endpoints: (builder) => ({
-            getAll: builder.query<IBook[], string>({
+            getAll: builder.query<IEvent[], string>({
                 query: () => `${endpoint}`,
                 providesTags: (result) =>
                     result
                         ? [
-                            ...result.map(({ book_id }) => ({ type: TAG, book_id } as const)),
+                            ...result.map(({ event_id }) => ({ type: TAG, event_id } as const)),
                             { type: TAG, id: 'LIST' },
                         ]
                         : [{ type: TAG, id: 'LIST' }],
             }),
-            get: builder.query<IBook, string>({
+            get: builder.query<IEvent, string>({
                 query: (id) => `${endpoint}/${id}`,
                 providesTags: (result, error, id) => [{ type: TAG, id }],
             }),
-            create: builder.mutation<IBook, Partial<IBook>>({
+            create: builder.mutation<IEvent, Partial<IEvent>>({
                 query: (body) => ({
                     url: `${endpoint}`,
                     method: 'POST',
                     body,
                 }),
-                invalidatesTags: (result, error, { book_id }) => [{ type: TAG, book_id }],
+                invalidatesTags: (result, error, { event_id }) => [{ type: TAG, event_id }],
             }),
-            update: builder.mutation<IBook, Partial<IBook>>({
+            update: builder.mutation<IEvent, Partial<IEvent>>({
                 query: (data) => {
-                    const { book_id, ...body } = data;
+                    const { event_id, ...body } = data;
 
                     return ({
-                        url: `${endpoint}/${book_id}`,
+                        url: `${endpoint}/${event_id}`,
                         method: 'POST',
                         body,
                     })
                 },
-                invalidatesTags: (result, error, { book_id }) => [{ type: TAG, book_id }],
+                invalidatesTags: (result, error, { event_id }) => [{ type: TAG, event_id }],
             }),
             delete: builder.mutation<{ success: boolean; id: number }, number>({
                 query: (id) => ({
@@ -50,8 +50,10 @@ export const booksApi = createApi({
                 }),
                 invalidatesTags: () => [{ type: TAG}],
             }),
-        }),
+        })
+        ,
     }
 );
 
-export const {useCreateMutation, useDeleteMutation, useUpdateMutation, useGetAllQuery, useGetQuery} = booksApi;
+export const {useCreateMutation, useDeleteMutation, useUpdateMutation, useGetAllQuery, useGetQuery} = eventsApi;
+
