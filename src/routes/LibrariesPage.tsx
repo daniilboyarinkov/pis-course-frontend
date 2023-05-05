@@ -156,7 +156,7 @@ export default function LibrariesPage() {
     return (
         <div>
             <div className="py-8 px-4 flex justify-between">
-                <p className="text-2xl">Читатели</p>
+                <p className="text-2xl">Библиотеки</p>
                 <div className="flex items-center gap-4">
                     <p className="text-xl mr-12">Поиск&nbsp;по:</p>
                     <div className="form-control w-full max-w-xs">

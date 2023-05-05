@@ -52,7 +52,7 @@ export const TABLE_LIBRARY_STATISCTIC_HEADER_TITLES: IHeadRowTitle[] = [
 ];
 
 export const TABLE_EVENT_HEADER_TITLES: IHeadRowTitle[] = [
-    { id: 'title-1', title: 'ID' },
+    // { id: 'title-1', title: 'ID' },
     { id: 'title-2', title: 'Библиотека' },
     { id: 'title-3', title: 'Оформил' },
     { id: 'title-4', title: 'Дата начала' },
