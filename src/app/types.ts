@@ -58,6 +58,12 @@ export interface ILibrary {
     address: string,
 }
 
+export interface ILibraryStatistic {
+    opened_count: number,
+    closed_count: number,
+    overdued_count: number,
+}
+
 export interface IStore {
     library_id: number,
     book_id: number,

@@ -11,8 +11,11 @@ export const statisticApi = createApi({
             getReaderStatistic: builder.query<IReaderStatistic, string>({
                 query: (id) => `/reader/${id}`,
             }),
+            getLibraryStatistic: builder.query<IReaderStatistic, string>({
+                query: (id) => `/library/${id}`,
+            }),
         }),
     }
 );
 
-export const {useGetBookStatisticQuery, useGetReaderStatisticQuery} = statisticApi;
+export const {useGetBookStatisticQuery, useGetReaderStatisticQuery, useGetLibraryStatisticQuery} = statisticApi;

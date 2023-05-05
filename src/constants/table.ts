@@ -45,6 +45,12 @@ export const TABLE_LIBRARY_HEADER_TITLES: IHeadRowTitle[] = [
     { id: 'title-2', title: 'Адрес' },
 ];
 
+export const TABLE_LIBRARY_STATISCTIC_HEADER_TITLES: IHeadRowTitle[] = [
+    { id: 'title-1', title: 'Взято книг' },
+    { id: 'title-2', title: 'Возвращено книг' },
+    { id: 'title-3', title: 'Просрочено' },
+];
+
 export const TABLE_EVENT_HEADER_TITLES: IHeadRowTitle[] = [
     { id: 'title-1', title: 'ID' },
     { id: 'title-2', title: 'Библиотека' },
