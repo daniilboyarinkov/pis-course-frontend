@@ -15,7 +15,7 @@ type TableProps<T> = {
      * действие выполняемое при клике на строку таблицы
      * @param id
      */
-    onRowClick?: (id?: any) => any,
+    onRowClick?: (id?: any, extraId?: any) => any,
     /**
      * ограничение по количеству строк, отображаемых в таблице
      */
@@ -94,12 +94,12 @@ type TableRowProps<T> = {
     content: T;
     // номер строки
     index: number;
-    onRowClick?: (id?: T[keyof T]) => any,
+    onRowClick?: (id?: T[keyof T], extraId?: T[keyof T]) => any,
 };
 
 export function TableRow<T extends object>(props: TableRowProps<T>) {
     return (
-        <tr onClick={() => props.onRowClick?.(props.content[Object.keys(props.content)[0] as keyof typeof props.content])} className="cursor-pointer">
+        <tr onClick={() => props.onRowClick?.(props.content[Object.keys(props.content)[0] as keyof typeof props.content], props.content[Object.keys(props.content)[1] as keyof typeof props.content])} className="cursor-pointer">
             {Object.keys(props.content).map((el, index) => (
                 <td key={`${el}-${index}`} className="whitespace-normal">
                     {String(props.content[el as keyof typeof props.content])}

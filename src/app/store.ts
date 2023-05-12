@@ -7,6 +7,7 @@ import {eventsApi} from './eventsApi';
 import {librariesApi} from './librariesApi';
 import {authApi} from './auth/authApi';
 import {statisticApi} from './statisticApi';
+import {storeApi} from './storeApi';
 import userReducer from './auth/userSlice';
 
 export const store = configureStore({
@@ -18,6 +19,7 @@ export const store = configureStore({
         [eventsApi.reducerPath]: eventsApi.reducer,
         [librariesApi.reducerPath]: librariesApi.reducer,
         [authApi.reducerPath]: authApi.reducer,
+        [storeApi.reducerPath]: storeApi.reducer,
         [statisticApi.reducerPath]: statisticApi.reducer,
         userState: userReducer,
     },
@@ -32,6 +34,7 @@ export const store = configureStore({
                 ordersApi.middleware,
                 eventsApi.middleware,
                 librariesApi.middleware,
+                storeApi.middleware,
             ]
         ),
 });

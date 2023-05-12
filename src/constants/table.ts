@@ -75,4 +75,10 @@ export const TABLE_ORDER_HEADER_TITLES: IHeadRowTitle[] = [
     { id: 'title-10', title: 'Бессрочный?' },
 ];
 
+export const TABLE_STORE_HEADER_TITLES: IHeadRowTitle[] = [
+    { id: 'title-1', title: 'Библиотека' },
+    { id: 'title-2', title: 'Книга' },
+    { id: 'title-3', title: 'В наличии' },
+];
+
 export const TABLE_ROW_LIMIT = 10;

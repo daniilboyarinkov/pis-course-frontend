@@ -16,7 +16,7 @@ export const FormInput = (props: IFormInput) => {
     return (
         <div className="form-control w-full max-w-xs">
             <label className="label">
-                <span className="label-text">
+                <span className="label-text text-white underline underline-offset-4">
                     {props.label_text}
                 </span>
             </label>

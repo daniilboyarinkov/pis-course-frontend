@@ -46,8 +46,17 @@ export default function OrdersPage() {
     const [searchByReader, setSearchByReader] = useState('');
     const [searchByBook, setSearchByBook] = useState('');
 
-    const filtered = data
-        .filter(d => d);
+    const converted = data.map((d: IOrder) => ({
+        ...d,
+        reader_id: (readers ?? []).find(l => l.reader_id === d.reader_id)?.last_name ?? '',
+        book_id: (books ?? []).find(l => l.book_id === d.book_id)?.title ?? '',
+    }));
+
+    const filtered = converted
+        .filter(d =>
+            d.reader_id.toLowerCase().includes(searchByReader.toLowerCase())
+            && (!!searchByBook.length ? d.book_id?.toLowerCase().includes(searchByBook.toLowerCase()) : true)
+        );
 
     const [active, setActive] = useState<IOrder | null>(null);
     const [newT, setNewT] = useImmer<IOrder>(initial);
@@ -93,8 +102,8 @@ export default function OrdersPage() {
     const handleDelete = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        if (deleteId !== active?.library_id) {
-            toast.info(`Заказ ${active?.library_id ?? deleteId} не был удален`);
+        if (deleteId !== active?.order_id) {
+            toast.info(`Заказ ${active?.order_id ?? deleteId} не был удален`);
             return;
         }
 
@@ -110,6 +119,26 @@ export default function OrdersPage() {
     }
 
     const createFields = useMemo((): IFormInput[] => [
+            {
+                id: 'input-form-6',
+                label_text: 'Долгосрочный?',
+                type: 'bool',
+                value: newT.isLongTerm,
+                onChange: () => setNewT(d => ({
+                    ...d,
+                    isLongTerm: !d.isLongTerm,
+                })),
+            },
+            {
+                id: 'input-form-7',
+                label_text: 'Бессрочный?',
+                type: 'bool',
+                value: newT.isPerpetual,
+                onChange: () => setNewT(d => ({
+                    ...d,
+                    isPerpetual: !d.isPerpetual,
+                })),
+            },
             {
                 id: 'input-form-1',
                 label_text: 'Библиотека',
@@ -146,39 +175,8 @@ export default function OrdersPage() {
                     d.reader_id = +e;
                 }),
             },
-            {
-                id: 'input-form-4',
-                label_text: 'Статус',
-                type: 'radio',
-                value: newT.order_status,
-                items: [OrderStatus.OPENED, OrderStatus.OVERDUED, OrderStatus.CLOSED],
-                onChangeItemName: 'order_status',
-                onChange: (e: string) => setNewT(d => {
-                    d.order_status = e as OrderStatus;
-                }),
-            },
-            {
-                id: 'input-form-6',
-                label_text: 'Долгосрочный?',
-                type: 'bool',
-                value: newT.isLongTerm,
-                onChange: () => setNewT(d => ({
-                    ...d,
-                    isLongTerm: !d.isLongTerm,
-                })),
-            },
-            {
-                id: 'input-form-7',
-                label_text: 'Бессрочный?',
-                type: 'bool',
-                value: newT.isPerpetual,
-                onChange: () => setNewT(d => ({
-                    ...d,
-                    isPerpetual: !d.isPerpetual,
-                })),
-            },
         ],
-        [books, libraries, newT.book_id, newT.isLongTerm, newT.isPerpetual, newT.library_id, newT.order_status, newT.reader_id, readers, setNewT]);
+        [books, libraries, newT.book_id, newT.isLongTerm, newT.isPerpetual, newT.library_id, newT.reader_id, readers, setNewT]);
 
     const updateFields = useMemo((): IFormInput[] => [
             {
@@ -217,24 +215,24 @@ export default function OrdersPage() {
                     d.reader_id = +e;
                 }),
             },
-            {
-                id: 'input-form1-4',
-                label_text: 'Статус',
-                type: 'radio',
-                value: updated.order_status,
-                items: [OrderStatus.OPENED, OrderStatus.OVERDUED, OrderStatus.CLOSED],
-                onChangeItemName: 'order_status',
-                onChange: (e: string) => setUpdated(d => {
-                    d.order_status = e as OrderStatus;
-                }),
-            },
+            // {
+            //     id: 'input-form1-4',
+            //     label_text: 'Статус',
+            //     type: 'radio',
+            //     value: updated.order_status,
+            //     items: [OrderStatus.OPENED, OrderStatus.OVERDUED, OrderStatus.CLOSED],
+            //     onChangeItemName: 'order_status',
+            //     onChange: (e: string) => setUpdated(d => {
+            //         d.order_status = e as OrderStatus;
+            //     }),
+            // },
             {
                 id: 'input-form1-5',
                 label_text: 'Дата возврата',
                 type: 'text',
-                value: updated.return_date,
+                value: updated.close_date,
                 onChange: (e: ChangeEvent<HTMLInputElement>) => setUpdated(d => {
-                    d.return_date = e.target.value
+                    d.close_date = e.target.value
                 }),
             },
             {
@@ -258,7 +256,7 @@ export default function OrdersPage() {
                 })),
             },
         ],
-        [books, libraries, readers, setUpdated, updated.book_id, updated.isLongTerm, updated.isPerpetual, updated.library_id, updated.order_status, updated.reader_id, updated.return_date]);
+        [books, libraries, readers, setUpdated, updated.book_id, updated.close_date, updated.isLongTerm, updated.isPerpetual, updated.library_id, updated.reader_id]);
 
     const deleteFields = useMemo((): IFormInput[] => [
             {
@@ -309,7 +307,7 @@ export default function OrdersPage() {
                         data={filtered}
                         headers={TABLE_ORDER_HEADER_TITLES}
                         onRowClick={(id) => setActive(data.find(d => {
-                            return d.library_id === id;
+                            return d.order_id === id;
                         }) ?? null)}
                     />
                 </div>

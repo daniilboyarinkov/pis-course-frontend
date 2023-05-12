@@ -5,7 +5,7 @@ import {userPermissions} from '../utils/utils';
 import {
     BOOK_READ_PERMISSION,
     EVENT_READ_PERMISSION, LIBRARY_READ_PERMISSION,
-    ORDER_READ_PERMISSION,
+    ORDER_READ_PERMISSION, STORE_READ_PERMISSION,
     USER_READ_PERMISSION
 } from '../constants/permissions';
 
@@ -32,6 +32,15 @@ export function Header() {
                     {
                         isLoggedIn && (
                             <>
+                                {
+                                    permissions.includes(STORE_READ_PERMISSION) && (
+                                        <li>
+                                            <NavLink to='/store' className="btn btn-ghost normal-case text-xl">
+                                                Хранилище
+                                            </NavLink>
+                                        </li>
+                                    )
+                                }
                                 {
                                     permissions.includes(LIBRARY_READ_PERMISSION) && (
                                         <li>
@@ -92,7 +101,10 @@ export function Header() {
                         {
                             isLoggedIn
                                 ? <button
-                                    onClick={() => dispatch(logout())}
+                                    onClick={() => {
+                                        dispatch(logout());
+                                        window.location.reload();
+                                    }}
                                     className="btn normal-case"
                                 >
                                     Выйти

@@ -38,7 +38,12 @@ export default function EventsPage() {
     const {user} = useAppSelector(state => state.userState);
     const permissions = userPermissions(user?.role);
 
-    const filtered = data
+    const converted = data.map(d => ({
+        ...d,
+        employee_id: (employees ?? []).find(l => l.employee_id === d.employee_id)?.last_name ?? '',
+    }));
+
+    const filtered = converted
         .filter(d => d);
 
     const [active, setActive] = useState<IEvent | null>(null);
