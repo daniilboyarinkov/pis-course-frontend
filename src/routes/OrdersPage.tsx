@@ -43,7 +43,8 @@ export default function OrdersPage() {
     const {user} = useAppSelector(state => state.userState);
     const permissions = userPermissions(user?.role);
 
-    const [searchByName, setSearchByName] = useState('');
+    const [searchByReader, setSearchByReader] = useState('');
+    const [searchByBook, setSearchByBook] = useState('');
 
     const filtered = data
         .filter(d => d);
@@ -157,15 +158,6 @@ export default function OrdersPage() {
                 }),
             },
             {
-                id: 'input-form-5',
-                label_text: 'Дата возврата',
-                type: 'text',
-                value: newT.return_date,
-                onChange: (e: ChangeEvent<HTMLInputElement>) => setNewT(d => {
-                    d.return_date = e.target.value
-                }),
-            },
-            {
                 id: 'input-form-6',
                 label_text: 'Долгосрочный?',
                 type: 'bool',
@@ -186,7 +178,7 @@ export default function OrdersPage() {
                 })),
             },
         ],
-        [books, libraries, newT.book_id, newT.isLongTerm, newT.isPerpetual, newT.library_id, newT.order_status, newT.reader_id, newT.return_date, readers, setNewT]);
+        [books, libraries, newT.book_id, newT.isLongTerm, newT.isPerpetual, newT.library_id, newT.order_status, newT.reader_id, readers, setNewT]);
 
     const updateFields = useMemo((): IFormInput[] => [
             {
@@ -295,18 +287,20 @@ export default function OrdersPage() {
                 <p className="text-2xl">Заказы</p>
                 <div className="flex items-center gap-4">
                     <p className="text-xl mr-12">Поиск&nbsp;по:</p>
-                    <div className="form-control w-full max-w-xs">
-                        <label className="label">
-                            <span className="label-text">Адресу</span>
-                        </label>
-                        <input
-                            value={searchByName}
-                            onChange={(e) => setSearchByName(e.target.value)}
-                            type="text"
-                            placeholder="Адресу..."
-                            className="input input-bordered w-full max-w-xs"
-                        />
-                    </div>
+                    <input
+                        value={searchByReader}
+                        onChange={(e) => setSearchByReader(e.target.value)}
+                        type="text"
+                        placeholder="Читателю..."
+                        className="input input-bordered w-full max-w-xs"
+                    />
+                    <input
+                        value={searchByBook}
+                        onChange={(e) => setSearchByBook(e.target.value)}
+                        type="text"
+                        placeholder="Книге..."
+                        className="input input-bordered w-full max-w-xs"
+                    />
                 </div>
             </div>
             <div className="grid" style={{gridTemplateColumns: '3fr 1fr'}}>

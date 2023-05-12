@@ -89,13 +89,13 @@ export default function LibrariesPage() {
         e.preventDefault();
 
         if (deleteId !== active?.library_id) {
-            toast.info(`Книга ${active?.library_id ?? deleteId} не была удалена`);
+            toast.info(`Библиотека ${active?.library_id ?? deleteId} не была удалена`);
             return;
         }
 
         await deleteFn(deleteId).unwrap()
             .then(() => {
-                toast.success(`Книга ${deleteId} была успешно удалена`);
+                toast.success(`Библиотека ${deleteId} была успешно удалена`);
                 setDeleteId(0);
             })
             .catch((err: FetchBaseQueryError) => {
@@ -159,18 +159,13 @@ export default function LibrariesPage() {
                 <p className="text-2xl">Библиотеки</p>
                 <div className="flex items-center gap-4">
                     <p className="text-xl mr-12">Поиск&nbsp;по:</p>
-                    <div className="form-control w-full max-w-xs">
-                        <label className="label">
-                            <span className="label-text">Адресу</span>
-                        </label>
-                        <input
-                            value={searchByName}
-                            onChange={(e) => setSearchByName(e.target.value)}
-                            type="text"
-                            placeholder="Адресу..."
-                            className="input input-bordered w-full max-w-xs"
-                        />
-                    </div>
+                    <input
+                        value={searchByName}
+                        onChange={(e) => setSearchByName(e.target.value)}
+                        type="text"
+                        placeholder="Адресу..."
+                        className="input input-bordered w-full max-w-xs"
+                    />
                 </div>
             </div>
             <div className="grid" style={{gridTemplateColumns: '3fr 1fr'}}>

@@ -162,7 +162,7 @@ export default function EmployeesPage() {
                 id: 'input-form-5',
                 label_text: 'Должность',
                 type: 'radio',
-                items: [Position.BIBLIOGRAPHER, Position.ADMINISTRATOR, Position.LIBRARIAN, Position.READER],
+                items: [Position.BIBLIOGRAPHER, Position.ADMINISTRATOR, Position.LIBRARIAN],
                 value: newT.position,
                 onChange: (e: string) => setNewT(d => {
                     d.position = e as Position
@@ -227,7 +227,7 @@ export default function EmployeesPage() {
                 id: 'input-form-5',
                 label_text: 'Должность',
                 type: 'radio',
-                items: [Position.BIBLIOGRAPHER, Position.ADMINISTRATOR, Position.LIBRARIAN, Position.READER],
+                items: [Position.BIBLIOGRAPHER, Position.ADMINISTRATOR, Position.LIBRARIAN],
                 value: updated.position,
                 onChange: (e: string) => setUpdated(d => {
                     d.position = e as Position
@@ -263,18 +263,13 @@ export default function EmployeesPage() {
                 <p className="text-2xl">Сотрудники</p>
                 <div className="flex items-center gap-4">
                     <p className="text-xl mr-12">Поиск&nbsp;по:</p>
-                    <div className="form-control w-full max-w-xs">
-                        <label className="label">
-                            <span className="label-text">Имени</span>
-                        </label>
-                        <input
-                            value={searchByName}
-                            onChange={(e) => setSearchByName(e.target.value)}
-                            type="text"
-                            placeholder="Имени..."
-                            className="input input-bordered w-full max-w-xs"
-                        />
-                    </div>
+                    <input
+                        value={searchByName}
+                        onChange={(e) => setSearchByName(e.target.value)}
+                        type="text"
+                        placeholder="Имени..."
+                        className="input input-bordered w-full max-w-xs"
+                    />
                 </div>
             </div>
             <div className="grid" style={{gridTemplateColumns: '3fr 1fr'}}>

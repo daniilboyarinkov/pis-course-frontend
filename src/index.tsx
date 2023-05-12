@@ -13,6 +13,7 @@ import LibrariesPage from './routes/LibrariesPage';
 import OrdersPage from './routes/OrdersPage';
 import EventsPage from './routes/EventsPage';
 import StorePage from './routes/StorePage';
+import IndexPage from './routes/IndexPage';
 
 const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement
@@ -27,6 +28,10 @@ const router = createBrowserRouter(
             <Route
                 path="login"
                 element={<LoginPage />}
+            />
+            <Route
+                path=""
+                element={<IndexPage />}
             />
             <Route
                 path="books"

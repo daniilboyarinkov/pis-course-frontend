@@ -1,8 +1,8 @@
 export enum Position {
-    LIBRARIAN = 'librarian',
-    BIBLIOGRAPHER = 'bibliographer',
-    ADMINISTRATOR = 'administrator',
-    READER = 'reader',
+    LIBRARIAN = 'Librarian',
+    BIBLIOGRAPHER = 'Bibliographer',
+    ADMINISTRATOR = 'Administrator',
+    READER = 'Reader',
 }
 
 export enum OrderStatus {

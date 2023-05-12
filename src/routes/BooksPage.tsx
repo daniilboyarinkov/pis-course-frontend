@@ -187,30 +187,20 @@ export default function BooksPage() {
                 <p className="text-2xl">Книги</p>
                 <div className="flex items-center gap-4">
                     <p className="text-xl mr-12">Поиск&nbsp;по:</p>
-                    <div className="form-control w-full max-w-xs">
-                        <label className="label">
-                            <span className="label-text">Названию</span>
-                        </label>
-                        <input
-                            value={searchByTitle}
-                            onChange={(e) => setSearchByTitle(e.target.value)}
-                            type="text"
-                            placeholder="Название..."
-                            className="input input-bordered w-full max-w-xs"
-                        />
-                    </div>
-                    <div className="form-control w-full max-w-xs">
-                        <label className="label">
-                            <span className="label-text">Автору</span>
-                        </label>
-                        <input
-                            value={searchByAuthor}
-                            onChange={(e) => setSearchByAuthor(e.target.value)}
-                            type="text"
-                            placeholder="Автор..."
-                            className="input input-bordered w-full max-w-xs"
-                        />
-                    </div>
+                    <input
+                        value={searchByTitle}
+                        onChange={(e) => setSearchByTitle(e.target.value)}
+                        type="text"
+                        placeholder="Название..."
+                        className="input input-bordered w-full max-w-xs"
+                    />
+                    <input
+                        value={searchByAuthor}
+                        onChange={(e) => setSearchByAuthor(e.target.value)}
+                        type="text"
+                        placeholder="Автор..."
+                        className="input input-bordered w-full max-w-xs"
+                    />
                 </div>
             </div>
             <div className="grid" style={{gridTemplateColumns: '3fr 1fr'}}>

@@ -12,7 +12,7 @@ import {
  * @param role
  */
 export const userPermissions = (role: Position | undefined) => {
-    switch (role?.toLowerCase()) {
+    switch (role) {
         case(Position.READER): return READER_PERMISSIONS;
         case(Position.ADMINISTRATOR): return ADMINISTRATOR_PERMISSIONS;
         case(Position.LIBRARIAN): return LIBRARIAN_PERMISSIONS;

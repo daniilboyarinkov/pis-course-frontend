@@ -38,8 +38,6 @@ export default function EventsPage() {
     const {user} = useAppSelector(state => state.userState);
     const permissions = userPermissions(user?.role);
 
-    const [searchByName, setSearchByName] = useState('');
-
     const filtered = data
         .filter(d => d);
 
@@ -61,7 +59,7 @@ export default function EventsPage() {
 
         await createFn(newT).unwrap()
             .then(() => {
-                toast.success("Заказ успешно оформлен!");
+                toast.success("Событие успешно зарегистрировано!");
                 setNewT(initial);
             })
             .catch((err: FetchBaseQueryError) => {
@@ -88,13 +86,13 @@ export default function EventsPage() {
         e.preventDefault();
 
         if (deleteId !== active?.event_id) {
-            toast.info(`Заказ ${active?.event_id ?? deleteId} не был удален`);
+            toast.info(`Событие ${active?.event_id ?? deleteId} не было удалено`);
             return;
         }
 
         await deleteFn(deleteId).unwrap()
             .then(() => {
-                toast.success(`Заказ ${deleteId} был успешно удален`);
+                toast.success(`Событие ${deleteId} был успешно удалено`);
                 setDeleteId(0);
             })
             .catch((err: FetchBaseQueryError) => {
@@ -263,22 +261,7 @@ export default function EventsPage() {
     return (
         <div>
             <div className="py-8 px-4 flex justify-between">
-                <p className="text-2xl">Заказы</p>
-                <div className="flex items-center gap-4">
-                    <p className="text-xl mr-12">Поиск&nbsp;по:</p>
-                    <div className="form-control w-full max-w-xs">
-                        <label className="label">
-                            <span className="label-text">Адресу</span>
-                        </label>
-                        <input
-                            value={searchByName}
-                            onChange={(e) => setSearchByName(e.target.value)}
-                            type="text"
-                            placeholder="Адресу..."
-                            className="input input-bordered w-full max-w-xs"
-                        />
-                    </div>
-                </div>
+                <p className="text-2xl">Событие</p>
             </div>
             <div className="grid" style={{gridTemplateColumns: '3fr 1fr'}}>
                 <div className="p-4">

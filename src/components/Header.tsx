@@ -1,4 +1,4 @@
-import {Link} from 'react-router-dom';
+import {NavLink} from 'react-router-dom';
 import {useAppDispatch, useAppSelector} from '../app/hooks';
 import {logout} from '../app/auth/userSlice';
 import {userPermissions} from '../utils/utils';
@@ -18,7 +18,14 @@ export function Header() {
     return (
         <div className="navbar bg-base-100">
             <div className="flex-1">
-                <Link to='/' className="btn btn-ghost normal-case text-xl">АИС Библиотека</Link>
+                <NavLink
+                    to='/'
+                    className={({ isActive, isPending }) =>
+                        isPending ? "pending" : isActive ? "btn btn-ghost normal-case text-xl bg-red" : "btn btn-ghost normal-case text-xl"
+                    }
+                >
+                    АИС Библиотека
+                </NavLink>
             </div>
             <div className="flex-none">
                 <ul className="menu menu-horizontal px-1">
@@ -28,53 +35,53 @@ export function Header() {
                                 {
                                     permissions.includes(LIBRARY_READ_PERMISSION) && (
                                         <li>
-                                            <Link to='/libraries' className="btn btn-ghost normal-case text-xl">
+                                            <NavLink to='/libraries' className="btn btn-ghost normal-case text-xl">
                                                 Библиотеки
-                                            </Link>
+                                            </NavLink>
                                         </li>
                                     )
                                 }
                                 {
                                     permissions.includes(USER_READ_PERMISSION) && (
                                         <li>
-                                            <Link to='/readers' className="btn btn-ghost normal-case text-xl">
+                                            <NavLink to='/readers' className="btn btn-ghost normal-case text-xl">
                                                 Читатели
-                                            </Link>
+                                            </NavLink>
                                         </li>
                                     )
                                 }
                                 {
                                     permissions.includes(USER_READ_PERMISSION) && (
                                         <li>
-                                        <Link to='/employees' className="btn btn-ghost normal-case text-xl">
+                                        <NavLink to='/employees' className="btn btn-ghost normal-case text-xl">
                                             Сотрудники
-                                        </Link>
+                                        </NavLink>
                                     </li>
                                     )
                                 }
                                 {
                                     permissions.includes(BOOK_READ_PERMISSION) && (
                                         <li>
-                                            <Link to='/books' className="btn btn-ghost normal-case text-xl">
+                                            <NavLink to='/books' className="btn btn-ghost normal-case text-xl">
                                                 Книги
-                                            </Link>
+                                            </NavLink>
                                         </li>
                                     )
                                 }{
                                 permissions.includes(ORDER_READ_PERMISSION) && (
                                     <li>
-                                        <Link to='/orders' className="btn btn-ghost normal-case text-xl">
+                                        <NavLink to='/orders' className="btn btn-ghost normal-case text-xl">
                                             Заказы
-                                        </Link>
+                                        </NavLink>
                                     </li>
                                 )
                             }
                                 {
                                     permissions.includes(EVENT_READ_PERMISSION) && (
                                         <li>
-                                            <Link to='/events' className="btn btn-ghost normal-case text-xl">
+                                            <NavLink to='/events' className="btn btn-ghost normal-case text-xl">
                                                 События
-                                            </Link>
+                                            </NavLink>
                                         </li>
                                     )
                                 }
@@ -90,9 +97,9 @@ export function Header() {
                                 >
                                     Выйти
                                 </button>
-                                : <Link to='/login' className="btn normal-case">
+                                : <NavLink to='/login' className="btn normal-case">
                                     Войти
-                                </Link>
+                                </NavLink>
                         }
                     </li>
                 </ul>

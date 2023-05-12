@@ -98,13 +98,13 @@ export default function ReadersPage() {
         e.preventDefault();
 
         if (deleteId !== active?.reader_id) {
-            toast.info(`Книга ${active?.reader_id ?? deleteId} не была удалена`);
+            toast.info(`Читатель ${active?.reader_id ?? deleteId} не был удален`);
             return;
         }
 
         await deleteFn(deleteId).unwrap()
             .then(() => {
-                toast.success(`Книга ${deleteId} была успешно удалена`);
+                toast.success(`Читатель ${deleteId} была успешно удален`);
                 setDeleteId(0);
             })
             .catch((err: FetchBaseQueryError) => {
@@ -228,18 +228,13 @@ export default function ReadersPage() {
                 <p className="text-2xl">Читатели</p>
                 <div className="flex items-center gap-4">
                     <p className="text-xl mr-12">Поиск&nbsp;по:</p>
-                    <div className="form-control w-full max-w-xs">
-                        <label className="label">
-                            <span className="label-text">Имени</span>
-                        </label>
-                        <input
-                            value={searchByName}
-                            onChange={(e) => setSearchByName(e.target.value)}
-                            type="text"
-                            placeholder="Имени..."
-                            className="input input-bordered w-full max-w-xs"
-                        />
-                    </div>
+                    <input
+                        value={searchByName}
+                        onChange={(e) => setSearchByName(e.target.value)}
+                        type="text"
+                        placeholder="Имени..."
+                        className="input input-bordered w-full max-w-xs"
+                    />
                 </div>
             </div>
             <div className="grid" style={{gridTemplateColumns: '3fr 1fr'}}>

@@ -25,6 +25,7 @@ export const authApi = createApi({
                         const { data } = await queryFulfilled;
                         if (data) {
                             const user: IUser = {...data, role: isUserEmployee(data) ? (data as IEmployee).pos : Position.READER};
+                            console.log(user)
 
                             toast.success(`Добро пожаловать, ${user.first_name} ${user.last_name}!`);
                             dispatch(setUser(user));
