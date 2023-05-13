@@ -204,35 +204,41 @@ export default function LibrariesPage() {
                         )
                     }
                     {/* CONTROLS */}
-                    <div className="flex py-4 gap-2">
-                        {
-                            active && (
-                                <>
-                                    {
-                                        permissions.includes(LIBRARY_UPDATE_PERMISSION) && (
-                                            <label htmlFor={UPDATE_MODAL}
-                                                   className="flex-auto btn btn-active btn-primary">Изменить</label>
-                                        )
-                                    }
-                                    {
-                                        permissions.includes(LIBRARY_DELETE_PERMISSION) && (
-                                            <label htmlFor={DELETE_MODAL}
-                                                   className="flex-auto btn btn-active btn-secondary">Удалить</label>
-                                        )
-                                    }
-                                </>
-                            )
-                        }
-                        {
-                            permissions.includes(LIBRARY_CREATE_PERMISSION) && (
-                                <label htmlFor={CREATE_MODAL}
-                                       className="flex-auto btn btn-active btn-accent">Создать</label>
-                            )
-                        }
-                    </div>
-                    <div className="flex pb-4 gap-2">
-                        <button onClick={refetch} className="flex-auto btn btn-active">Обновить</button>
-                    </div>
+                {/*    <div className="flex py-4 gap-2">*/}
+                {/*        {*/}
+                {/*            active && (*/}
+                {/*                <>*/}
+                {/*                    {*/}
+                {/*                        permissions.includes(LIBRARY_UPDATE_PERMISSION) && (*/}
+                {/*                            <label htmlFor={UPDATE_MODAL}*/}
+                {/*                                   className="flex-auto btn btn-active btn-primary">Изменить</label>*/}
+                {/*                        )*/}
+                {/*                    }*/}
+                {/*                    /!*{*!/*/}
+                {/*                    /!*    permissions.includes(LIBRARY_DELETE_PERMISSION) && (*!/*/}
+                {/*                    /!*        <label htmlFor={DELETE_MODAL}*!/*/}
+                {/*                    /!*               className="flex-auto btn btn-active btn-secondary">Удалить</label>*!/*/}
+                {/*                    /!*    )*!/*/}
+                {/*                    /!*}*!/*/}
+                {/*                    {*/}
+                {/*                        permissions.includes(LIBRARY_DELETE_PERMISSION) && (*/}
+                {/*                            <button onClick={() => alert('Я запрещаю вам удалять!')}*/}
+                {/*                                   className="flex-auto btn btn-active btn-secondary">Удалить</button>*/}
+                {/*                        )*/}
+                {/*                    }*/}
+                {/*                </>*/}
+                {/*            )*/}
+                {/*        }*/}
+                {/*        {*/}
+                {/*            permissions.includes(LIBRARY_CREATE_PERMISSION) && (*/}
+                {/*                <label htmlFor={CREATE_MODAL}*/}
+                {/*                       className="flex-auto btn btn-active btn-accent">Создать</label>*/}
+                {/*            )*/}
+                {/*        }*/}
+                {/*    </div>*/}
+                {/*    <div className="flex pb-4 gap-2">*/}
+                {/*        <button onClick={refetch} className="flex-auto btn btn-active">Обновить</button>*/}
+                {/*    </div>*/}
                 </div>
             </div>
 

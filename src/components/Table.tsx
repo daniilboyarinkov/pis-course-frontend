@@ -62,7 +62,7 @@ export function Table<T extends object>(props: TableProps<T>) {
                         )
                     }
                 </>
-                : <div>No data...</div>}
+                : <div>Данных нет...</div>}
         </div>
     );
 }

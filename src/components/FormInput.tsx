@@ -5,6 +5,7 @@ export type IFormInput = {
     label_text: string;
     type: 'number' | 'text' | 'radio' | 'bool';
     items?: any[],
+    renderItems?: any[],
     renderItemName?: string,
     onChangeItemName?: string,
     placeholder?: string,
@@ -26,7 +27,7 @@ export const FormInput = (props: IFormInput) => {
                         <div className="form-control">
                             {props.items?.map((item, index) => (
                                 <label key={index} className="label cursor-pointer">
-                                    <span className="label-text">{item[props.renderItemName ?? ''] ?? item}</span>
+                                    <span className="label-text">{(props.renderItems?.[index] ?? item)[props.renderItemName ?? ''] ?? (props.renderItems?.[index] ?? item)}</span>
                                     <input
                                         checked={String(props.value).toLowerCase() === (item[props.onChangeItemName || props.renderItemName || '']?.toString() ?? String(item).toLowerCase())}
                                         onChange={() => props.onChange(item[props.onChangeItemName || props.renderItemName || ''] ?? item)}

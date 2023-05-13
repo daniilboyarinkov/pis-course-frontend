@@ -1,12 +1,18 @@
 import {useUpdateQuery} from '../app/auth/authApi';
-import {useCreateMutation, useDeleteMutation, useGetAllQuery, useUpdateMutation} from '../app/ordersApi';
+import {
+    useCloseMutation,
+    useCreateMutation,
+    useDeleteMutation,
+    useGetAllQuery,
+    useUpdateMutation
+} from '../app/ordersApi';
 import {useGetAllQuery as useGetAllLibraries} from '../app/librariesApi';
 import {useGetAllQuery as useGetAllBooks} from '../app/booksApi';
 import {useGetAllQuery as useGetAllReaders} from '../app/readersApi';
 import {useAppSelector} from '../app/hooks';
 import {userPermissions} from '../utils/utils';
 import React, {ChangeEvent, FormEvent, useEffect, useMemo, useState} from 'react';
-import {IOrder, OrderStatus} from '../app/types';
+import {IOrder, IReader, IUser, OrderStatus, Position} from '../app/types';
 import {useImmer} from 'use-immer';
 import {toast} from 'react-toastify';
 import {FetchBaseQueryError} from '@reduxjs/toolkit/query';
@@ -46,10 +52,19 @@ export default function OrdersPage() {
     const [searchByReader, setSearchByReader] = useState('');
     const [searchByBook, setSearchByBook] = useState('');
 
-    const converted = data.map((d: IOrder) => ({
+    // @ts-ignore
+    const conv = user?.role === Position.READER ?  data.filter(d => d.reader_id === (user as IReader)?.id) : data;
+
+    const converted = conv.map((d: IOrder) => ({
         ...d,
         reader_id: (readers ?? []).find(l => l.reader_id === d.reader_id)?.last_name ?? '',
         book_id: (books ?? []).find(l => l.book_id === d.book_id)?.title ?? '',
+        close_date: d.close_date ?? 'На руках',
+        order_status: d.order_status === OrderStatus.OPENED ? 'Открыт' : d.order_status === OrderStatus.OVERDUED ? 'Просрочен' : 'Закрыт',
+        // @ts-ignore
+        islongterm: d.islongterm ? 'Да' : 'Нет',
+        // @ts-ignore
+        isperpetual: d.isperpetual ? 'Да' : 'Нет',
     }));
 
     const filtered = converted
@@ -70,6 +85,7 @@ export default function OrdersPage() {
     const [createFn] = useCreateMutation();
     const [updateFn] = useUpdateMutation();
     const [deleteFn] = useDeleteMutation();
+    const [closeFn] = useCloseMutation();
 
     const handleCreate = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -180,6 +196,26 @@ export default function OrdersPage() {
 
     const updateFields = useMemo((): IFormInput[] => [
             {
+                id: 'input-form1-6',
+                label_text: 'Долгосрочный?',
+                type: 'bool',
+                value: updated.isLongTerm,
+                onChange: () => setUpdated(d => ({
+                    ...d,
+                    isLongTerm: !d.isLongTerm,
+                })),
+            },
+            {
+                id: 'input-form1-7',
+                label_text: 'Бессрочный?',
+                type: 'bool',
+                value: updated.isPerpetual,
+                onChange: () => setUpdated(d => ({
+                    ...d,
+                    isPerpetual: !d.isPerpetual,
+                })),
+            },
+            {
                 id: 'input-form1-1',
                 label_text: 'Библиотека',
                 type: 'radio',
@@ -203,18 +239,6 @@ export default function OrdersPage() {
                     d.book_id = +e;
                 }),
             },
-            {
-                id: 'input-form1-3',
-                label_text: 'Читатель',
-                type: 'radio',
-                value: updated.reader_id,
-                items: readers,
-                renderItemName: 'last_name',
-                onChangeItemName: 'reader_id',
-                onChange: (e: string) => setUpdated(d => {
-                    d.reader_id = +e;
-                }),
-            },
             // {
             //     id: 'input-form1-4',
             //     label_text: 'Статус',
@@ -226,34 +250,26 @@ export default function OrdersPage() {
             //         d.order_status = e as OrderStatus;
             //     }),
             // },
+            // {
+            //     id: 'input-form1-5',
+            //     label_text: 'Дата возврата',
+            //     type: 'text',
+            //     value: updated.close_date,
+            //     onChange: (e: ChangeEvent<HTMLInputElement>) => setUpdated(d => {
+            //         d.close_date = e.target.value
+            //     }),
+            // },
             {
-                id: 'input-form1-5',
-                label_text: 'Дата возврата',
-                type: 'text',
-                value: updated.close_date,
-                onChange: (e: ChangeEvent<HTMLInputElement>) => setUpdated(d => {
-                    d.close_date = e.target.value
+                id: 'input-form1-3',
+                label_text: 'Читатель',
+                type: 'radio',
+                value: updated.reader_id,
+                items: readers,
+                renderItemName: 'last_name',
+                onChangeItemName: 'reader_id',
+                onChange: (e: string) => setUpdated(d => {
+                    d.reader_id = +e;
                 }),
-            },
-            {
-                id: 'input-form1-6',
-                label_text: 'Долгосрочный?',
-                type: 'bool',
-                value: updated.isLongTerm,
-                onChange: () => setUpdated(d => ({
-                    ...d,
-                    isLongTerm: !d.isLongTerm,
-                })),
-            },
-            {
-                id: 'input-form1-7',
-                label_text: 'Бессрочный?',
-                type: 'bool',
-                value: updated.isPerpetual,
-                onChange: () => setUpdated(d => ({
-                    ...d,
-                    isPerpetual: !d.isPerpetual,
-                })),
             },
         ],
         [books, libraries, readers, setUpdated, updated.book_id, updated.close_date, updated.isLongTerm, updated.isPerpetual, updated.library_id, updated.reader_id]);
@@ -285,13 +301,17 @@ export default function OrdersPage() {
                 <p className="text-2xl">Заказы</p>
                 <div className="flex items-center gap-4">
                     <p className="text-xl mr-12">Поиск&nbsp;по:</p>
-                    <input
-                        value={searchByReader}
-                        onChange={(e) => setSearchByReader(e.target.value)}
-                        type="text"
-                        placeholder="Читателю..."
-                        className="input input-bordered w-full max-w-xs"
-                    />
+                    {
+                        user?.role !== Position.READER && (
+                            <input
+                                value={searchByReader}
+                                onChange={(e) => setSearchByReader(e.target.value)}
+                                type="text"
+                                placeholder="Читателю..."
+                                className="input input-bordered w-full max-w-xs"
+                            />
+                        )
+                    }
                     <input
                         value={searchByBook}
                         onChange={(e) => setSearchByBook(e.target.value)}
@@ -318,7 +338,21 @@ export default function OrdersPage() {
                                 <p className='text-2xl'>Выбранный заказ:</p>
                                 <Table data={Object.keys(active).map((key, index) => ({
                                     columnTitle: TABLE_ORDER_HEADER_TITLES[index]?.title ?? '',
-                                    [key]: active[key as keyof IOrder],
+                                    [key]: key === 'reader_id'
+                                        ? (readers ?? []).find(r => r.reader_id === active?.reader_id)?.last_name
+                                        : key === 'book_id'
+                                            ? (books ?? []).find(r => r.book_id === active?.book_id)?.title
+                                            : key === 'order_status'
+                                                ? (active.order_status === OrderStatus.OPENED ? 'Открыт' : active.order_status === OrderStatus.OVERDUED ? 'Просрочен' : 'Закрыт')
+                                                : key === 'islongterm'
+                                                    // @ts-ignore
+                                                    ? (active.islongterm ? 'Да' : 'Нет')
+                                                    : key === 'isperpetual'
+                                                        // @ts-ignore
+                                                        ? (active.isperpetual ? 'Да' : 'Нет')
+                                                        : key === 'close_date'
+                                                            ? active.close_date ?? 'На руках'
+                                                            : active[key as keyof IOrder],
                                 }))}/>
                             </>
                         )
@@ -352,6 +386,26 @@ export default function OrdersPage() {
                     </div>
                     <div className="flex pb-4 gap-2">
                         <button onClick={refetch} className="flex-auto btn btn-active">Обновить</button>
+                        {
+                            permissions.includes(ORDER_UPDATE_PERMISSION) && active && (
+                                <button
+                                    className="flex-auto btn btn-active"
+                                    onClick={async () => {
+                                        await closeFn(active!.order_id).unwrap()
+                                            .then(() => {
+                                                toast.success("Заказ успешно закрыт!");
+                                                setNewT(initial);
+                                            })
+                                            .catch((err: FetchBaseQueryError) => {
+                                                console.log(err);
+                                                toast.error(`Произошла ошибка: ${err.data}`);
+                                            });
+                                    }}
+                                >
+                                    Закрыть заказ
+                                </button>
+                            )
+                        }
                     </div>
                 </div>
             </div>

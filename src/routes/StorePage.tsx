@@ -2,6 +2,7 @@ import {useUpdateQuery} from '../app/auth/authApi';
 import {useCreateMutation, useDeleteMutation, useGetAllQuery, useUpdateMutation} from '../app/storeApi';
 import {useGetAllQuery as useGetAllLibraries} from '../app/librariesApi';
 import {useGetAllQuery as useGetAllBooks} from '../app/booksApi';
+import {useGetAllQuery as useGetAllReaders} from '../app/readersApi';
 import {useAppSelector} from '../app/hooks';
 import {userPermissions} from '../utils/utils';
 import React, {ChangeEvent, FormEvent, useEffect, useMemo, useState} from 'react';
@@ -13,11 +14,13 @@ import {IFormInput} from '../components/FormInput';
 import {Table} from '../components/Table';
 import {TABLE_STORE_HEADER_TITLES} from '../constants/table';
 import {
+    STATISTIC_READ_PERMISSION,
     STORE_CREATE_PERMISSION,
     STORE_DELETE_PERMISSION,
     STORE_UPDATE_PERMISSION,
 } from '../constants/permissions';
 import Modal from '../components/Modal';
+import {useGetTakenStatisticQuery} from '../app/statisticApi';
 
 const initial: IStore = {
     library_id: 1,
@@ -35,9 +38,12 @@ export default function StorePage() {
 
     const {data: libraries} = useGetAllLibraries('');
     const {data: books} = useGetAllBooks('');
+    const {data: readers} = useGetAllReaders('');
 
     const {user} = useAppSelector(state => state.userState);
     const permissions = userPermissions(user?.role);
+
+    const {data: ddd} = useGetTakenStatisticQuery('');
 
     const filtered = data.map(d => ({
         ...d,
@@ -213,7 +219,7 @@ export default function StorePage() {
     return (
         <div>
             <div className="py-8 px-4 flex justify-between">
-                <p className="text-2xl">Библиотеки</p>
+                <p className="text-2xl">Хранилище</p>
                 <div className="flex items-center gap-4">
                     {/*<p className="text-xl mr-12">Поиск&nbsp;по:</p>*/}
                     {/*<input*/}
@@ -239,12 +245,27 @@ export default function StorePage() {
                     {
                         active && (
                             <>
-                                <p className='text-2xl'>Выбранная библиотека:</p>
                                 <Table data={Object.keys(active).map((key, index) => ({
                                     columnTitle: TABLE_STORE_HEADER_TITLES[index]?.title ?? '',
                                     [key]: active[key as keyof IStore],
                                 }))}/>
                             </>
+                        )
+                    }
+                    {
+                        permissions.includes(STATISTIC_READ_PERMISSION) && active && ddd && (
+                            <div className="py-8">
+                                <p className='text-2xl'>Книги на руках:</p>
+                                <Table headers={[
+                                    {id: '1', title: 'Читатель'},
+                                    {id: '2', title: 'Книга'},
+                                ]} data={Object.keys(ddd).map((key, index) => {
+                                    return ({
+                                        reader: (readers ?? []).find(r => ddd[key as any].reader_id === r.reader_id)?.last_name ?? '',
+                                        book: (books ?? []).find(r => ddd[key as any].book_id === r.book_id)?.title ?? '',
+                                    })
+                                })}/>
+                            </div>
                         )
                     }
                     {/* CONTROLS */}

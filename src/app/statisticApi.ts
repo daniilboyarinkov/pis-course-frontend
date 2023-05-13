@@ -1,5 +1,5 @@
 import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/query/react";
-import {IBookStatistic, IReaderStatistic} from "./types";
+import {IBookStatistic, IReaderStatistic, ITakenBooksStatistic, IUserBooksStatistic} from "./types";
 
 export const statisticApi = createApi({
         reducerPath: "statisticApi",
@@ -14,8 +14,14 @@ export const statisticApi = createApi({
             getLibraryStatistic: builder.query<IReaderStatistic, string>({
                 query: (id) => `/library/${id}`,
             }),
+            getTakenStatistic: builder.query<ITakenBooksStatistic[], string>({
+                query: () => `/taken-books`,
+            }),
+            getUserBooksStatistic: builder.query<IUserBooksStatistic[], string>({
+                query: (id) => `/user-books/${id}`,
+            }),
         }),
     }
 );
 
-export const {useGetBookStatisticQuery, useGetReaderStatisticQuery, useGetLibraryStatisticQuery} = statisticApi;
+export const {useGetBookStatisticQuery, useGetReaderStatisticQuery, useGetLibraryStatisticQuery, useGetTakenStatisticQuery, useGetUserBooksStatisticQuery} = statisticApi;

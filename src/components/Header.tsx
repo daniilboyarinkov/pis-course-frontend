@@ -35,7 +35,7 @@ export function Header() {
                                 {
                                     permissions.includes(STORE_READ_PERMISSION) && (
                                         <li>
-                                            <NavLink to='/store' className="btn btn-ghost normal-case text-xl">
+                                            <NavLink to='/store' className="btn btn-ghost normal-case text-xl py-2">
                                                 Хранилище
                                             </NavLink>
                                         </li>
@@ -44,7 +44,7 @@ export function Header() {
                                 {
                                     permissions.includes(LIBRARY_READ_PERMISSION) && (
                                         <li>
-                                            <NavLink to='/libraries' className="btn btn-ghost normal-case text-xl">
+                                            <NavLink to='/libraries' className="btn btn-ghost normal-case text-xl py-2">
                                                 Библиотеки
                                             </NavLink>
                                         </li>
@@ -53,7 +53,7 @@ export function Header() {
                                 {
                                     permissions.includes(USER_READ_PERMISSION) && (
                                         <li>
-                                            <NavLink to='/readers' className="btn btn-ghost normal-case text-xl">
+                                            <NavLink to='/readers' className="btn btn-ghost normal-case text-xl py-2">
                                                 Читатели
                                             </NavLink>
                                         </li>
@@ -62,7 +62,7 @@ export function Header() {
                                 {
                                     permissions.includes(USER_READ_PERMISSION) && (
                                         <li>
-                                        <NavLink to='/employees' className="btn btn-ghost normal-case text-xl">
+                                        <NavLink to='/employees' className="btn btn-ghost normal-case text-xl py-2">
                                             Сотрудники
                                         </NavLink>
                                     </li>
@@ -71,7 +71,7 @@ export function Header() {
                                 {
                                     permissions.includes(BOOK_READ_PERMISSION) && (
                                         <li>
-                                            <NavLink to='/books' className="btn btn-ghost normal-case text-xl">
+                                            <NavLink to='/books' className="btn btn-ghost normal-case text-xl py-2">
                                                 Книги
                                             </NavLink>
                                         </li>
@@ -79,7 +79,7 @@ export function Header() {
                                 }{
                                 permissions.includes(ORDER_READ_PERMISSION) && (
                                     <li>
-                                        <NavLink to='/orders' className="btn btn-ghost normal-case text-xl">
+                                        <NavLink to='/orders' className="btn btn-ghost normal-case text-xl py-2">
                                             Заказы
                                         </NavLink>
                                     </li>
@@ -88,7 +88,7 @@ export function Header() {
                                 {
                                     permissions.includes(EVENT_READ_PERMISSION) && (
                                         <li>
-                                            <NavLink to='/events' className="btn btn-ghost normal-case text-xl">
+                                            <NavLink to='/events' className="btn btn-ghost normal-case text-xl py-2">
                                                 События
                                             </NavLink>
                                         </li>

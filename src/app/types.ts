@@ -92,3 +92,12 @@ export interface IOrder {
     isLongTerm: boolean,
     isPerpetual: boolean,
 }
+
+export type IUserBooksStatistic = {
+    book_id: number,
+};
+
+export interface ITakenBooksStatistic{
+    reader_id: number,
+    book_id: number,
+}

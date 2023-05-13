@@ -40,7 +40,12 @@ export default function EmployeesPage() {
 
     const [searchByName, setSearchByName] = useState('');
 
-    const filtered = data
+    const converted = data.map(d => ({
+        ...d,
+        position: d.position === Position.LIBRARIAN ? 'Библиотекарь' : d.position === Position.BIBLIOGRAPHER ? 'Библиограф' : d.position === Position.ADMINISTRATOR ? 'Администратор' : 'Читатель',
+    }))
+
+    const filtered = converted
         .filter(d =>
             d.first_name.toLowerCase().includes(searchByName.toLowerCase())
             || d.last_name.toLowerCase().includes(searchByName.toLowerCase())
@@ -163,6 +168,7 @@ export default function EmployeesPage() {
                 label_text: 'Должность',
                 type: 'radio',
                 items: [Position.BIBLIOGRAPHER, Position.ADMINISTRATOR, Position.LIBRARIAN],
+                renderItems: ['Библиограф', 'Администратор', 'Библиотекарь'],
                 value: newT.position,
                 onChange: (e: string) => setNewT(d => {
                     d.position = e as Position
@@ -228,6 +234,7 @@ export default function EmployeesPage() {
                 label_text: 'Должность',
                 type: 'radio',
                 items: [Position.BIBLIOGRAPHER, Position.ADMINISTRATOR, Position.LIBRARIAN],
+                renderItems: ['Библиограф', 'Администратор', 'Библиотекарь'],
                 value: updated.position,
                 onChange: (e: string) => setUpdated(d => {
                     d.position = e as Position
@@ -294,7 +301,9 @@ export default function EmployeesPage() {
                                     columnTitle: TABLE_EMPLOYEE_HEADER_TITLES[index]?.title ?? '',
                                     [key]: (index === Object.keys(active).length - 2)
                                         ? '*****'
-                                        : active[key as keyof IEmployee],
+                                        : key === 'position'
+                                            ? (active.position === Position.LIBRARIAN ? 'Библиотекарь' : active.position === Position.BIBLIOGRAPHER ? 'Библиограф' : active.position === Position.ADMINISTRATOR ? 'Администратор' : 'Читатель')
+                                    : active[key as keyof IEmployee]
                                 }))}/>
                             </>
                         )

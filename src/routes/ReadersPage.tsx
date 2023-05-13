@@ -10,7 +10,7 @@ import {userPermissions} from '../utils/utils';
 import React, {ChangeEvent, FormEvent, useEffect, useMemo, useState} from 'react';
 import {IReader, IReaderStatistic} from '../app/types';
 import {useImmer} from 'use-immer';
-import {useGetReaderStatisticQuery} from '../app/statisticApi';
+import {useGetReaderStatisticQuery, useGetUserBooksStatisticQuery} from '../app/statisticApi';
 import {toast} from 'react-toastify';
 import {FetchBaseQueryError} from '@reduxjs/toolkit/query';
 import {IFormInput} from '../components/FormInput';
@@ -23,6 +23,7 @@ import {
     STATISTIC_READ_PERMISSION
 } from '../constants/permissions';
 import Modal from '../components/Modal';
+import {useGetAllQuery as useGetAllBooks} from '../app/booksApi';
 
 const initial: IReader = {
     reader_id: 1,
@@ -65,6 +66,9 @@ export default function ReadersPage() {
     const [deleteFn] = useDeleteMutation();
 
     const {data: d} = useGetReaderStatisticQuery(String(active?.reader_id ?? '1'));
+    const {data: dd} = useGetUserBooksStatisticQuery(String(active?.reader_id ?? '1'));
+
+    const {data: books} = useGetAllBooks('');
 
     const handleCreate = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -272,6 +276,18 @@ export default function ReadersPage() {
                                     return ({
                                         columnTitle: TABLE_STATISTIC_READER_HEADER_TITLES[index].title,
                                         [key]: d[key as keyof IReaderStatistic],
+                                    })
+                                })}/>
+                            </div>
+                        )
+                    }
+                    {
+                        permissions.includes(STATISTIC_READ_PERMISSION) && active && dd && (
+                            <div className="py-8">
+                                <p className='text-2xl'>Взятые книги:</p>
+                                <Table data={Object.keys(dd).map((key, index) => {
+                                    return ({
+                                        [key]: (books ?? []).find(b => b.book_id === dd[key as any].book_id)?.title ?? '' ,
                                     })
                                 })}/>
                             </div>

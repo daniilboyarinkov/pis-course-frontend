@@ -285,7 +285,9 @@ export default function EventsPage() {
                                 <p className='text-2xl'>Выбранный заказ:</p>
                                 <Table data={Object.keys(active).map((key, index) => ({
                                     columnTitle: TABLE_EVENT_HEADER_TITLES[index]?.title ?? '',
-                                    [key]: active[key as keyof IEvent],
+                                    [key]: key === 'employee_id'
+                                        ? (employees ?? []).find(l => l.employee_id === active.employee_id)?.last_name ?? ''
+                                        : active[key as keyof IEvent],
                                 }))}/>
                             </>
                         )

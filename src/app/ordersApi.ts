@@ -50,10 +50,17 @@ export const ordersApi = createApi({
                 }),
                 invalidatesTags: () => [{ type: TAG}],
             }),
+            close: builder.mutation<{ success: boolean; id: number }, number>({
+                query: (id) => ({
+                    url: `${endpoint}/${id}/close`,
+                    method: 'POST',
+                }),
+                invalidatesTags: () => [{ type: TAG}],
+            }),
         })
         ,
     }
 );
 
-export const {useCreateMutation, useDeleteMutation, useUpdateMutation, useGetAllQuery, useGetQuery} = ordersApi;
+export const {useCreateMutation, useDeleteMutation, useUpdateMutation, useGetAllQuery, useCloseMutation} = ordersApi;
 
